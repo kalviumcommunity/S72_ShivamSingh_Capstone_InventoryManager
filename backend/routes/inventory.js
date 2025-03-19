@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Inventory = require("../models/Inventory");
+const mongoose = require("mongoose");
 
 // GET all inventory items
 router.get("/api/inventory/items", async (req, res) => {
@@ -27,6 +28,49 @@ router.post("/api/inventory/items", async (req, res) => {
     } catch (error) {
         console.error("Error creating inventory item:", error);
         res.status(500).json({ message: "Error creating inventory item", error: error.message });
+    }
+});
+
+// PUT update inventory item
+router.put("/api/inventory/items/:id", async (req, res) => {
+    try {
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ 
+                message: "Invalid item ID format",
+                details: "The provided ID is not a valid MongoDB ObjectId"
+            });
+        }
+
+        const updatedItem = await Inventory.findByIdAndUpdate(
+            req.params.id,
+            {
+                name: req.body.name,
+                quantity: req.body.quantity,
+                price: req.body.price,
+                category: req.body.category
+            },
+            { 
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!updatedItem) {
+            return res.status(404).json({ 
+                message: "Item not found",
+                details: "No inventory item exists with the provided ID"
+            });
+        }
+
+        res.status(200).json(updatedItem);
+    } catch (error) {
+        console.error("Error updating inventory item:", error);
+        res.status(500).json({ 
+            message: "Error updating inventory item", 
+            error: error.message,
+            details: "Please ensure all required fields are provided with correct data types"
+        });
     }
 });
 
