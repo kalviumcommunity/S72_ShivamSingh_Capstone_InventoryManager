@@ -7,5 +7,5 @@ const inventorySchema = new mongoose.Schema({
     category: String
 }, { timestamps: true });
 
-module.exports = mongoose.model("Inventory", InventorySchema, "items");
+module.exports = mongoose.model("Inventory", inventorySchema, "items");
 
