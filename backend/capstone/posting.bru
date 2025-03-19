@@ -6,6 +6,15 @@ meta {
 
 post {
   url: http://localhost:5000/api/inventory/items
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "name": "Test Item",
+    "quantity": 5,
+    "price": 29.99,
+    "category": "Test Category"
+  }
 }
