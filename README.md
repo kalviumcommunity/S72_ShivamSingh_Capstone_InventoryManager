@@ -87,3 +87,6 @@ This project is licensed under the **MIT License**.
 
 💡 **Contributions are welcome!** Feel free to open an issue or submit a pull request. 🚀
 
+**Render deploy link**
+
+https://s72-shivamsingh-capstone-inventorymanager.onrender.com
