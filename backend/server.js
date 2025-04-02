@@ -16,8 +16,13 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB Connected"))
 .catch((err) => console.error("MongoDB connection error:", err));
 
+// Add a route for "/"
+app.get("/", (req, res) => {
+    res.send("Server is running!");
+});
+
 // Mount the routes correctly
-app.use(inventoryRoutes);
+app.use("/api", inventoryRoutes); // Ensure your routes have a prefix if needed
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
