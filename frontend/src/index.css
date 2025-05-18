@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary-50: 240 249 255;
+    --color-primary-100: 224 242 254;
+    --color-primary-200: 186 230 253;
+    --color-primary-300: 125 211 252;
+    --color-primary-400: 56 189 248;
+    --color-primary-500: 14 165 233;
+    --color-primary-600: 2 132 199;
+    --color-primary-700: 3 105 161;
+    --color-primary-800: 7 89 133;
+    --color-primary-900: 12 74 110;
+  }
+
+  .dark {
+    --color-primary-50: 12 74 110;
+    --color-primary-100: 7 89 133;
+    --color-primary-200: 3 105 161;
+    --color-primary-300: 2 132 199;
+    --color-primary-400: 14 165 233;
+    --color-primary-500: 56 189 248;
+    --color-primary-600: 125 211 252;
+    --color-primary-700: 186 230 253;
+    --color-primary-800: 224 242 254;
+    --color-primary-900: 240 249 255;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-900;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-900;
+  }
+
+  .input-field {
+    @apply block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm dark:bg-gray-700 dark:text-white;
+  }
+
+  .card {
+    @apply bg-white dark:bg-gray-800 shadow rounded-lg;
+  }
+
+  .card-header {
+    @apply px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .card-body {
+    @apply px-4 py-5 sm:p-6;
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+}

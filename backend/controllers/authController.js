@@ -99,49 +99,45 @@ exports.register = async (req, res) => {
 // Login user
 exports.login = async (req, res) => {
   try {
-    console.log('Login attempt:', { email: req.body.email });
     const { email, password } = req.body;
 
-    // Check if email and password exist
+    // Log the login attempt
+    console.log('Login attempt:', { email });
+
+    // 1) Check if email and password exist
     if (!email || !password) {
-      console.log('Missing credentials:', { email: !!email, password: !!password });
       return res.status(400).json({
-        success: false,
+        status: 'error',
         message: 'Please provide email and password'
       });
     }
 
-    // Check if user exists && password is correct
+    // 2) Check if user exists && password is correct
     const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      console.log('User not found:', email);
+
+    if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
-        success: false,
+        status: 'error',
         message: 'Incorrect email or password'
       });
     }
 
-    // Check if password is correct
-    const isPasswordCorrect = await user.correctPassword(password, user.password);
-    if (!isPasswordCorrect) {
-      console.log('Incorrect password for user:', email);
-      return res.status(401).json({
-        success: false,
-        message: 'Incorrect email or password'
-      });
-    }
+    // 3) If everything ok, send token to client
+    const token = signToken(user._id);
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    // Remove password from output
+    user.password = undefined;
 
-    console.log('Login successful for user:', email);
-    createSendToken(user, 200, res);
+    res.status(200).json({
+      status: 'success',
+      token,
+      user
+    });
   } catch (error) {
-    console.error('Login error:', error);
+    console.warn('Login error:', error);
     res.status(400).json({
-      success: false,
-      message: error.message || 'An error occurred during login'
+      status: 'error',
+      message: error.message
     });
   }
 };
@@ -406,6 +402,59 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+// Google Authentication
+exports.googleAuth = async (req, res) => {
+  try {
+    const { firebaseUid, email, name, idToken } = req.body;
+
+    if (!firebaseUid || !email) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing required fields'
+      });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user if doesn't exist
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        firebaseUid,
+        role: 'Staff',
+        password: crypto.randomBytes(32).toString('hex'), // Generate random password
+        passwordConfirm: undefined // Skip password validation
+      });
+    } else {
+      // Update existing user's Firebase UID if not set
+      if (!user.firebaseUid) {
+        user.firebaseUid = firebaseUid;
+        await user.save({ validateBeforeSave: false });
+      }
+    }
+
+    // Generate JWT token
+    const token = signToken(user._id);
+
+    // Remove password from output
+    user.password = undefined;
+
+    res.status(200).json({
+      status: 'success',
+      token,
+      user
+    });
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error during Google authentication'
+    });
+  }
+};
+
 module.exports = {
   register: exports.register,
   login: exports.login,
@@ -413,5 +462,6 @@ module.exports = {
   resetPassword: exports.resetPassword,
   updatePassword: exports.updatePassword,
   getMe: exports.getMe,
-  updateProfile: exports.updateProfile
+  updateProfile: exports.updateProfile,
+  googleAuth: exports.googleAuth
 }; 

@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
     trim: true
   },
+  firebaseUid: {
+    type: String,
+    unique: true,
+    sparse: true // Allows null/undefined values
+  },
   companyName: {
     type: String,
     default: ''
