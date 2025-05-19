@@ -75,7 +75,7 @@ const Landing: React.FC = () => {
               </Link>
               <button
                 onClick={() => setShowAuth(true)}
-                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
               >
                 Get Started
               </button>
@@ -104,7 +104,7 @@ const Landing: React.FC = () => {
             >
               <button
                 onClick={() => setShowAuth(true)}
-                className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-500 text-white rounded-lg hover:from-orange-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Get Started
               </button>
@@ -149,7 +149,7 @@ const Landing: React.FC = () => {
                 <div className="space-y-4">
                   <Link
                     to="/signup"
-                    className="block w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-center"
+                    className="block w-full px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-center"
                   >
                     Create Account
                   </Link>
@@ -168,7 +168,7 @@ const Landing: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    className="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-600 rounded-md hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 rounded-md hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                     onClick={handleTakeTour}
                   >
                     Take a Tour

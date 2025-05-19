@@ -1,154 +1,137 @@
-import React from 'react'
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  CurrencyDollarIcon,
-  CubeIcon,
-  ExclamationTriangleIcon,
-  ChartBarIcon,
-} from '@heroicons/react/24/outline'
+import React from 'react';
+import GraphicalGrid from '../components/GraphicalGrid';
+import { motion } from 'framer-motion';
 
-const stats = [
+const dashboardItems = [
   {
-    name: 'Total Revenue',
-    value: '$45,231.89',
-    change: '+20.1%',
-    changeType: 'increase',
-    icon: CurrencyDollarIcon,
+    title: 'Total Revenue',
+    description: '$45,231.89 (+20.1%)',
+    icon: '💰',
+    color: 'green',
   },
   {
-    name: 'Total Items',
-    value: '2,345',
-    change: '+12.3%',
-    changeType: 'increase',
-    icon: CubeIcon,
+    title: 'Total Items',
+    description: '2,345 items in stock',
+    icon: '📦',
+    color: 'blue',
   },
   {
-    name: 'Low Stock Items',
-    value: '12',
-    change: '-2.4%',
-    changeType: 'decrease',
-    icon: ExclamationTriangleIcon,
+    title: 'Low Stock Alert',
+    description: '12 items need attention',
+    icon: '⚠️',
+    color: 'orange',
   },
   {
-    name: 'Monthly Growth',
-    value: '+15.2%',
-    change: '+4.3%',
-    changeType: 'increase',
-    icon: ChartBarIcon,
+    title: 'Monthly Growth',
+    description: '+15.2% from last month',
+    icon: '📈',
+    color: 'purple',
   },
-]
+];
 
 const recentActivity = [
   {
-    id: 1,
-    user: 'John Doe',
-    action: 'Added new inventory item',
-    target: 'Product XYZ',
-    time: '3 minutes ago',
+    title: 'New Inventory Added',
+    description: 'John added Product XYZ',
+    icon: '➕',
+    color: 'green',
   },
   {
-    id: 2,
-    user: 'Jane Smith',
-    action: 'Updated stock levels',
-    target: 'Product ABC',
-    time: '15 minutes ago',
+    title: 'Stock Updated',
+    description: 'Jane updated Product ABC',
+    icon: '📝',
+    color: 'blue',
   },
   {
-    id: 3,
-    user: 'Mike Johnson',
-    action: 'Created new order',
-    target: 'Order #12345',
-    time: '1 hour ago',
+    title: 'New Order',
+    description: 'Mike created Order #12345',
+    icon: '🛒',
+    color: 'purple',
   },
-  {
-    id: 4,
-    user: 'Sarah Wilson',
-    action: 'Generated report',
-    target: 'Monthly Inventory Report',
-    time: '2 hours ago',
-  },
-]
+];
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="space-y-6">
-      {/* Stats */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div
-            key={stat.name}
-            className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6"
-          >
-            <dt>
-              <div className="absolute rounded-md bg-indigo-500 p-3">
-                <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
-              </div>
-              <p className="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-400">{stat.name}</p>
-            </dt>
-            <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{stat.value}</p>
-              <p
-                className={`ml-2 flex items-baseline text-sm font-semibold ${
-                  stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {stat.changeType === 'increase' ? (
-                  <ArrowUpIcon className="h-5 w-5 flex-shrink-0 self-center text-green-500" aria-hidden="true" />
-                ) : (
-                  <ArrowDownIcon className="h-5 w-5 flex-shrink-0 self-center text-red-500" aria-hidden="true" />
-                )}
-                <span className="sr-only">{stat.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
-                {stat.change}
-              </p>
-            </dd>
-          </div>
-        ))}
-      </div>
+    <div className="space-y-8">
+      {/* Welcome Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-8"
+      >
+        <h1 className="text-3xl font-bold text-white mb-2 font-['Inter']">
+          Welcome Back! 👋
+        </h1>
+        <p className="text-gray-400">
+          Here's what's happening with your inventory today
+        </p>
+      </motion.div>
+
+      {/* Stats Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <GraphicalGrid items={dashboardItems} />
+      </motion.div>
 
       {/* Recent Activity */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Activity</h3>
-        </div>
-        <div className="border-t border-gray-200 dark:border-gray-700">
-          <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-            {recentActivity.map((activity) => (
-              <li key={activity.id} className="px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400 truncate">
-                      {activity.user}
-                    </p>
-                    <p className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                      {activity.action} - {activity.target}
-                    </p>
-                  </div>
-                  <div className="ml-2 flex-shrink-0 flex">
-                    <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                      {activity.time}
-                    </p>
-                  </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
+      >
+        <h2 className="text-xl font-bold text-white mb-6 font-['Inter']">
+          Recent Activity
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {recentActivity.map((activity, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 + index * 0.1 }}
+              className="bg-white/5 rounded-xl p-4 border border-white/10 hover:bg-white/10 transition-colors duration-300"
+            >
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">{activity.icon}</span>
+                <div>
+                  <h3 className="text-white font-medium">{activity.title}</h3>
+                  <p className="text-sm text-gray-400">{activity.description}</p>
                 </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Inventory Trends Chart */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">Inventory Trends</h3>
+      {/* Quick Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
+      >
+        <h2 className="text-xl font-bold text-white mb-6 font-['Inter']">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {['Add Item', 'New Order', 'Generate Report', 'View Analytics'].map((action, index) => (
+            <motion.button
+              key={action}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-orange-500/20 to-orange-500/20 rounded-xl p-4 text-white border border-white/10 hover:from-orange-500/30 hover:to-orange-500/30 transition-all duration-300"
+            >
+              {action}
+            </motion.button>
+          ))}
         </div>
-        <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
-          <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
-            Chart will be implemented here
-          </div>
-        </div>
-      </div>
+      </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard 
+export default Dashboard; 

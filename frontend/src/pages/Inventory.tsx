@@ -13,7 +13,12 @@ import AddItemForm from '../components/AddItemForm'
 import toast from 'react-hot-toast'
 import ModalPortal from '../components/ModalPortal'
 
-const Inventory: React.FC = () => {
+interface InventoryProps {
+  isSidebarCollapsed?: boolean; // Optional prop
+  sidebarWidth?: number; // Optional prop
+}
+
+const Inventory: React.FC<InventoryProps> = ({ isSidebarCollapsed }) => {
   const [items, setItems] = useState<InventoryItem[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
@@ -193,10 +198,10 @@ const Inventory: React.FC = () => {
   // Category View
   if (!selectedCategory) {
     return (
-      <div className="space-y-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 md:p-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Categories</h1>
+            <h1 className="text-2xl font-semibold text-white font-['Inter']">Categories</h1>
             <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
               Select a category to view its items
             </p>
@@ -205,7 +210,7 @@ const Inventory: React.FC = () => {
             <button
               type="button"
               onClick={handleAddClick}
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:w-auto"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               Add Item
@@ -213,8 +218,24 @@ const Inventory: React.FC = () => {
           </div>
         </div>
 
+        {/* Search */}
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 pl-10 pr-3 py-2 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:text-white"
+            placeholder="Search items..."
+          />
+        </div>
+
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className={`grid gap-4 mt-6 ${
+          isSidebarCollapsed ? 'grid-cols-5' : 'grid-cols-4'
+        }`}>
           {categories.map(category => {
             const hasItems = categoriesWithItems.has(category.name)
             if (!hasItems) return null // Skip categories without items
@@ -222,26 +243,25 @@ const Inventory: React.FC = () => {
             return (
               <div
                 key={category.name}
-                className="flex flex-col items-center bg-transparent group focus:outline-none"
-                style={{ minHeight: 260 }}
+                className="flex flex-col items-center group focus:outline-none"
+                style={{ width: '100%', maxWidth: '160px' }}
               >
                 <button
                   onClick={() => setSelectedCategory(category.name)}
-                  className="flex items-center justify-center w-32 h-36 sm:w-40 sm:h-40 mb-2 overflow-hidden border-2 border-gray-300 rounded-xl transition-all duration-200 group-hover:border-indigo-500 group-hover:shadow-lg focus:outline-none"
-                  style={{ background: '#fff' }}
-                  tabIndex={0}
-                  aria-label={`View items in ${category.name}`}
+                  className="relative flex items-center justify-center w-32 h-36 sm:w-40 sm:h-40 mb-2 overflow-hidden border-2 border-dashed border-white/20 rounded-xl transition-all duration-200 group-hover:border-orange-500 group-hover:shadow-lg focus:outline-none transform rotate-1 scale-[1.02] p-2"
                 >
                   <img 
                     src={category.img} 
                     alt={category.name} 
-                    className="w-full h-full object-cover rounded-xl" 
+                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" 
                   />
                 </button>
-                <span className="text-base font-medium text-white text-center mt-2" style={{lineHeight: '1.2'}}>{category.name}</span>
-                <span className="text-xs text-white mt-1 text-center">
-                  {items.filter(item => item.category === category.name).length} items
-                </span>
+                <div className="text-center mt-2">
+                  <h3 className="block text-xl font-bold text-white mb-2 font-['Inter']">{category.name}</h3>
+                  <p className="block text-gray-300 text-sm mt-1 text-center">
+                    {items.filter(item => item.category === category.name).length} items
+                  </p>
+                </div>
               </div>
             )
           })}
@@ -265,14 +285,14 @@ const Inventory: React.FC = () => {
 
   // Items View for Selected Category
   return (
-    <div className="space-y-6">
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 md:p-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <button
             onClick={() => setSelectedCategory(null)}
             className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mb-4"
           >
-            <ArrowLeftIcon className="h-4 w-4 mr-1" />
+            <ArrowLeftIcon className="h-5 w-5 mr-2" />
             Back to Categories
           </button>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{selectedCategory}</h1>
@@ -284,7 +304,7 @@ const Inventory: React.FC = () => {
           <button
             type="button"
             onClick={handleAddClick}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:w-auto"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
             Add Item
@@ -336,17 +356,18 @@ const Inventory: React.FC = () => {
               </div>
               <div className="mt-4 flex gap-2">
                 <button 
-                  className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" 
+                  className="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 font-medium" 
                   onClick={() => handleEditClick(item)}
                 >
-                  <PencilIcon className="h-5 w-5" />
+                  Edit
                 </button>
                 <button 
-                  className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" 
-                  onClick={() => handleDeleteClick(item.id)} 
+                  type="button"
+                  onClick={() => handleDeleteClick(item.id)}
                   disabled={isDeleting === item.id}
+                  className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <TrashIcon className="h-5 w-5" />
+                  {isDeleting === item.id ? 'Deleting...' : 'Delete'}
                 </button>
               </div>
             </div>
@@ -355,31 +376,42 @@ const Inventory: React.FC = () => {
       )}
 
       {/* Add Item Modal */}
-      {isAddModalOpen && (
-        <ModalPortal isOpen={isAddModalOpen}>
-          <AddItemForm
-            onSubmit={handleAddItem}
-            onClose={() => setIsAddModalOpen(false)}
-            isSubmitting={isSubmitting}
-            isOpen={isAddModalOpen}
-            initialData={selectedCategory ? { category: selectedCategory } : undefined}
-          />
-        </ModalPortal>
-      )}
-
-      {/* Edit Item Modal */}
-      {isEditModalOpen && (
-        <ModalPortal isOpen={isEditModalOpen}>
-          <AddItemForm
-            onSubmit={handleEditItem}
-            onClose={() => { setIsEditModalOpen(false); setEditItem(null); }}
-            isSubmitting={isSubmitting}
-            initialData={{ ...editItem, minimumQuantity: (editItem as any).minimumQuantity ?? 1 }}
-            isEdit={true}
-            isOpen={isEditModalOpen}
-          />
-        </ModalPortal>
-      )}
+      <ModalPortal isOpen={isAddModalOpen || isEditModalOpen}>
+        <div className="relative transform overflow-hidden rounded-lg bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          <div className="bg-white/5 px-4 py-5 sm:p-6">
+            <h3 className="text-lg font-medium leading-6 text-white font-['Inter']">
+              {editItem ? 'Edit Inventory Item' : 'Add New Inventory Item'}
+            </h3>
+            <div className="mt-4">
+              <AddItemForm
+                onSubmit={editItem ? handleEditItem : handleAddItem}
+                onClose={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); setEditItem(null); }}
+                isSubmitting={isSubmitting}
+                initialData={editItem ? { ...editItem, minimumQuantity: editItem.minimumQuantity ?? 1 } : undefined}
+                isEdit={!!editItem}
+                isOpen={isAddModalOpen || isEditModalOpen}
+              >
+                <div className="mt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (editItem ? 'Updating...' : 'Adding...') : (editItem ? 'Save Changes' : 'Add Item')}
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 inline-flex justify-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 sm:mt-0 sm:ml-3"
+                    onClick={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); setEditItem(null); }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </AddItemForm>
+            </div>
+          </div>
+        </div>
+      </ModalPortal>
     </div>
   )
 }

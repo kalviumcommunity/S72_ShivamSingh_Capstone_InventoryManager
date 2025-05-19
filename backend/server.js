@@ -8,6 +8,10 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const winston = require('winston');
 const path = require('path');
+const createUploadDirs = require('./utils/createUploadDirs');
+
+// Create required upload directories
+createUploadDirs();
 
 // Initialize express app
 const app = express();

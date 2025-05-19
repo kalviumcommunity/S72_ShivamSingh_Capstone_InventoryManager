@@ -80,7 +80,7 @@ const Settings: React.FC = () => {
               setSelectedUser(null)
               setIsEditModalOpen(true)
             }}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:w-auto"
           >
             Add User
           </button>
@@ -107,7 +107,7 @@ const Settings: React.FC = () => {
                     <select
                       value={user.role}
                       onChange={(e) => handleRoleChange(user.id, e.target.value as User['role'])}
-                      className="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:text-white"
+                      className="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm focus:border-orange-500 focus:ring-orange-500 dark:text-white"
                     >
                       <option value="admin">Admin</option>
                       <option value="manager">Manager</option>
@@ -116,7 +116,7 @@ const Settings: React.FC = () => {
                     <select
                       value={user.status}
                       onChange={(e) => handleStatusChange(user.id, e.target.value as User['status'])}
-                      className="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:text-white"
+                      className="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm focus:border-orange-500 focus:ring-orange-500 dark:text-white"
                     >
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
@@ -127,7 +127,7 @@ const Settings: React.FC = () => {
                         setSelectedUser(user)
                         setIsEditModalOpen(true)
                       }}
-                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                      className="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300"
                     >
                       Edit
                     </button>
@@ -178,7 +178,7 @@ const Settings: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
-                    className="rounded-md bg-white dark:bg-gray-800 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="rounded-md bg-white dark:bg-gray-800 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                   >
                     <span className="sr-only">Close</span>
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -201,7 +201,7 @@ const Settings: React.FC = () => {
                           name="name"
                           id="name"
                           defaultValue={selectedUser?.name}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm dark:text-white"
                         />
                       </div>
                       <div>
@@ -213,7 +213,7 @@ const Settings: React.FC = () => {
                           name="email"
                           id="email"
                           defaultValue={selectedUser?.email}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm dark:text-white"
                         />
                       </div>
                       <div>
@@ -224,7 +224,7 @@ const Settings: React.FC = () => {
                           id="role"
                           name="role"
                           defaultValue={selectedUser?.role}
-                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
+                          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm dark:text-white"
                         >
                           <option value="admin">Admin</option>
                           <option value="manager">Manager</option>
@@ -237,7 +237,7 @@ const Settings: React.FC = () => {
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto"
                   >
                     {selectedUser ? 'Save Changes' : 'Add User'}
                   </button>

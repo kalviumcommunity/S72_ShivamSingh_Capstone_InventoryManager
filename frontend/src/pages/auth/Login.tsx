@@ -166,7 +166,7 @@ const Login: React.FC = () => {
                 name="email"
                 type="email"
                 required
-                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
                 name="password"
                 type="password"
                 required
-                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -191,7 +191,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="text-right">
-            <Link to="/forgot-password" className="text-sm text-gray-300 hover:text-purple-400">
+            <Link to="/forgot-password" className="text-sm text-gray-300 hover:text-orange-400">
               Forgot Password ?
             </Link>
           </div>
@@ -199,7 +199,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
@@ -234,7 +234,7 @@ const Login: React.FC = () => {
 
           <p className="text-center text-gray-400 mt-8">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-purple-400 hover:text-purple-500">
+            <Link to="/signup" className="text-orange-400 hover:text-orange-500">
               Sign up
             </Link>
           </p>
