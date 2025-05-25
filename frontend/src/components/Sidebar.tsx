@@ -20,44 +20,55 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
     navigate('/login');
   };
 
-  const navigation = [
-    { 
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: '📊',
-      description: 'Overview'
-    },
-    { 
-      name: 'Inventory',
-      href: '/inventory',
-      icon: '📦',
-      description: 'Stock Management'
-    },
-    { 
-      name: 'Orders',
-      href: '/orders',
-      icon: '📝',
-      description: 'New + Completed'
-    },
-    { 
-      name: 'Notifications',
-      href: '/notifications',
-      icon: '🔔',
-      description: 'Alerts & Logs'
-    },
-    { 
-      name: 'AI Insights',
-      href: '/ai-insights',
-      icon: '🤖',
-      description: 'Predictions & Reports'
-    },
-    { 
-      name: 'Settings',
-      href: '/settings',
-      icon: '⚙️',
-      description: 'User & System'
-    },
-  ];
+  // Define navigation items based on user role
+  const getNavigationItems = () => {
+    const baseItems = [
+      { 
+        name: 'Dashboard',
+        href: '/dashboard',
+        icon: '📊',
+        description: 'Overview'
+      },
+      { 
+        name: 'Inventory',
+        href: '/inventory',
+        icon: '📦',
+        description: 'Stock Management'
+      },
+      { 
+        name: 'Orders',
+        href: '/orders',
+        icon: '📝',
+        description: 'New + Completed'
+      },
+      { 
+        name: 'Notifications',
+        href: '/notifications',
+        icon: '🔔',
+        description: 'Alerts & Logs'
+      },
+      { 
+        name: 'AI Insights',
+        href: '/ai-insights',
+        icon: '🤖',
+        description: 'Predictions & Reports'
+      },
+    ];
+
+    // Only show Settings for admin role
+    if (user?.role === 'admin') {
+      baseItems.push({ 
+        name: 'Settings',
+        href: '/settings',
+        icon: '⚙️',
+        description: 'User & System'
+      });
+    }
+
+    return baseItems;
+  };
+
+  const navigation = getNavigationItems();
 
   return (
     <aside
@@ -109,4 +120,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

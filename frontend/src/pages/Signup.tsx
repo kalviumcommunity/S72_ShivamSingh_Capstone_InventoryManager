@@ -10,34 +10,59 @@ const Signup: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    companyName: ''
+    passwordConfirm: '',
+    companyName: '',
+    role: 'Staff'
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    console.log('Form submitted with data:', formData);
+    if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
     }
     setIsLoading(true);
 
     try {
-      await signup(formData);
+      const signupData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        passwordConfirm: formData.passwordConfirm,
+        companyName: formData.companyName,
+        role: 'Staff'
+      };
+      console.log('Sending signup data:', signupData);
+      await signup(signupData);
       toast.success('Account created successfully!');
       navigate('/dashboard');
-    } catch (error) {
-      toast.error('Failed to create account');
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to create account. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+    const { name, value } = e.target;
+    console.log('Form field changed:', { name, value });
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: value
+      };
+      console.log('Previous form data:', prev);
+      console.log('New form data:', newData);
+      return newData;
     });
   };
 
@@ -126,8 +151,8 @@ const Signup: React.FC = () => {
               <label className="block text-gray-400 mb-2">Confirm Password</label>
               <input
                 type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
                 onChange={handleChange}
                 placeholder="Confirm your password"
                 className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"

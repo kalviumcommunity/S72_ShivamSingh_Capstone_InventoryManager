@@ -45,11 +45,9 @@ const authService = {
       password: data.password
     });
     if (response.data.token) {
-      // If remember me is true, store in localStorage, otherwise in sessionStorage
       const storage = data.rememberMe ? localStorage : sessionStorage;
       storage.setItem('auth_token', response.data.token);
       storage.setItem('user', JSON.stringify(response.data.user));
-      // Update authentication state
       window.dispatchEvent(new Event('authStateChanged'));
     }
     return response.data;
@@ -67,10 +65,29 @@ const authService = {
     if (response.data.token) {
       localStorage.setItem('auth_token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      // Update authentication state
       window.dispatchEvent(new Event('authStateChanged'));
     }
     return response.data;
+  },
+
+  async googleAuth(token: string): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/google', { token });
+    if (response.data.token) {
+      localStorage.setItem('auth_token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      window.dispatchEvent(new Event('authStateChanged'));
+    }
+    return response.data;
+  },
+
+  async updateRole(role: string): Promise<void> {
+    const response = await api.post('/auth/update-role', { role });
+    const user = this.getUser();
+    if (user) {
+      const updatedUser = { ...user, role };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('authStateChanged'));
+    }
   },
 
   async getCurrentUser(): Promise<User> {
@@ -117,7 +134,6 @@ const authService = {
 
   updateProfile: async (data: FormData) => {
     try {
-      // Get the token
       const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
       
       if (!token) {
@@ -130,27 +146,22 @@ const authService = {
         },
       });
       
-      // Update stored user data if update was successful
       if (response.data.success && response.data.data.user) {
         const storage = localStorage.getItem('auth_token') ? localStorage : sessionStorage;
         const updatedUser = response.data.data.user;
         
-        // Ensure we're storing the complete user object
         storage.setItem('user', JSON.stringify({
           ...JSON.parse(storage.getItem('user') || '{}'),
           ...updatedUser
         }));
 
-        // Update authentication state
         window.dispatchEvent(new Event('authStateChanged'));
       }
       return response.data;
     } catch (error: any) {
-      // Log the error for debugging
       console.error('Profile update error:', error.response || error);
       
       if (error.response?.status === 401) {
-        // Handle unauthorized error (token expired or invalid)
         authService.logout();
         window.location.href = '/login';
       }
@@ -160,4 +171,4 @@ const authService = {
   },
 };
 
-export default authService; 
+export default authService;

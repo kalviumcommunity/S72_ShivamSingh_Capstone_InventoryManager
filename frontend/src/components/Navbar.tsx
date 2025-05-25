@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import authService from '../services/authService';
 
 const Navbar: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -13,6 +14,17 @@ const Navbar: React.FC = () => {
   const getPageTitle = () => {
     const path = location.pathname.split('/')[1];
     return path.charAt(0).toUpperCase() + path.slice(1);
+  };
+
+  const getRoleBadgeColor = (role: string) => {
+    switch (role?.toLowerCase()) {
+      case 'store_manager':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      case 'inventory_manager':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
   };
 
   return (
@@ -30,6 +42,13 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-6">
+            {/* Role Badge */}
+            {user?.role && (
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
+                {user.role.replace('_', ' ')}
+              </span>
+            )}
+
             <div className="relative group">
               <input
                 type="text"
@@ -120,6 +139,11 @@ const Navbar: React.FC = () => {
                     <div className="px-4 py-2 border-b border-white/10">
                       <p className="text-sm font-medium text-white">{user?.name || 'Guest User'}</p>
                       <p className="text-xs text-gray-400">{user?.email}</p>
+                      {user?.role && (
+                        <span className={`mt-1 inline-block px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
+                          {user.role.replace('_', ' ')}
+                        </span>
+                      )}
                     </div>
                     <div className="py-1">
                       <button
@@ -152,4 +176,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

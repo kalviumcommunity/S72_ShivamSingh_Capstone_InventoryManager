@@ -2,11 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import authService from '../services/authService';
 
 export interface User {
-  id: string;
-  username: string;
-  email?: string;
-  name?: string;
-  role?: string;
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  companyName: string;
+  profileImage?: string;
 }
 
 interface AuthContextType {
@@ -14,6 +15,9 @@ interface AuthContextType {
   setUser: (user: User | null) => void;
   isAuthenticated: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  signup: (data: any) => Promise<void>;
+  login: (data: any) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,11 +52,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
 
+  const signup = async (data: any) => {
+    try {
+      const response = await authService.signup(data);
+      setUser(response.user);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
+    }
+  };
+
+  const login = async (data: any) => {
+    try {
+      const response = await authService.login(data);
+      setUser(response.user);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  };
+
+  const logout = () => {
+    authService.logout();
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
   const value = {
     user,
     setUser,
     isAuthenticated,
-    setIsAuthenticated
+    setIsAuthenticated,
+    signup,
+    login,
+    logout
   };
 
   return (

@@ -1,167 +1,189 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import authService from '../../services/authService';
+import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    passwordConfirm: '',
+    confirmPassword: '',
     companyName: '',
-    role: 'Staff',
+    role: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [showRoleSelection, setShowRoleSelection] = useState(true);
+
+  const roles = [
+    { id: 'admin', title: 'Admin', description: 'Full access to all features including user management' },
+    { id: 'store-manager', title: 'Store Manager', description: 'Manage inventory and view reports' },
+    { id: 'employee', title: 'Employee', description: 'Basic inventory management' },
+    { id: 'store-worker', title: 'Store Worker', description: 'View and update inventory only' }
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.role) {
+      toast.error('Please select a role');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
     setIsLoading(true);
 
     try {
-      await authService.signup(formData);
-      toast.success('Successfully registered! Please login.');
-      navigate('/login');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to register');
+      await signup(formData);
+      toast.success('Account created successfully!');
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error('Failed to create account');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSignup = () => {
-    // TODO: Implement Google signup
-    toast.error('Google signup not implemented yet');
+  const handleRoleSelect = (role: string) => {
+    setFormData(prev => ({ ...prev, role }));
+    setShowRoleSelection(false);
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f1117] text-white p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold">Sign up</h1>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  if (showRoleSelection) {
+    return (
+      <div className="min-h-screen bg-[#0f1117] flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full">
+          <h1 className="text-3xl font-bold text-white text-center mb-8">Select Your Role</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {roles.map((role) => (
+              <button
+                key={role.id}
+                onClick={() => handleRoleSelect(role.id)}
+                className="bg-[#1c1f26] p-6 rounded-lg text-left hover:bg-[#2a2d35] transition-colors border border-gray-700"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">{role.title}</h3>
+                <p className="text-gray-400 text-sm">{role.description}</p>
+              </button>
+            ))}
+          </div>
         </div>
+      </div>
+    );
+  }
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+  return (
+    <div className="min-h-screen bg-[#0f1117] relative">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-md">
+          <h1 className="text-4xl font-bold text-white text-center mb-8">Sign Up</h1>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
-                Full Name
-              </label>
+              <label className="block text-gray-400 mb-2">Name</label>
               <input
-                id="name"
-                name="name"
                 type="text"
-                required
-                className="w-full px-3 py-2 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="Enter your full name"
+                name="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email
-              </label>
+              <label className="block text-gray-400 mb-2">Email</label>
               <input
-                id="email"
-                name="email"
                 type="email"
-                required
-                className="w-full px-3 py-2 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="Enter your email"
+                name="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
-                Password
-              </label>
+              <label className="block text-gray-400 mb-2">Password</label>
               <input
-                id="password"
+                type="password"
                 name="password"
-                type="password"
-                required
-                className="w-full px-3 py-2 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="Enter password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
               />
             </div>
 
             <div>
-              <label htmlFor="passwordConfirm" className="block text-sm font-medium text-gray-300 mb-1">
-                Confirm Password
-              </label>
+              <label className="block text-gray-400 mb-2">Confirm Password</label>
               <input
-                id="passwordConfirm"
-                name="passwordConfirm"
                 type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 required
-                className="w-full px-3 py-2 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                placeholder="Confirm password"
-                value={formData.passwordConfirm}
-                onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
               />
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="companyName" className="block text-sm font-medium text-gray-300 mb-1">
-              Company Name
-            </label>
-            <input
-              id="companyName"
-              name="companyName"
-              type="text"
-              required
-              className="w-full px-3 py-2 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              placeholder="Enter your company name"
-              value={formData.companyName}
-              onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2.5 px-4 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Creating account...' : 'Sign up'}
-          </button>
-
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-700"></div>
+            <div>
+              <label className="block text-gray-400 mb-2">Company Name</label>
+              <input
+                type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                placeholder="Enter your company name"
+                className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-[#0f1117] text-gray-400">Sign up with Google</span>
-            </div>
-          </div>
 
-          <div className="flex justify-center mb-4">
+            <div className="bg-[#2a2d35] p-4 rounded-lg">
+              <p className="text-white">Selected Role: <span className="font-semibold">{roles.find(r => r.id === formData.role)?.title}</span></p>
+              <button
+                type="button"
+                onClick={() => setShowRoleSelection(true)}
+                className="text-purple-400 text-sm hover:text-purple-300 mt-2"
+              >
+                Change Role
+              </button>
+            </div>
+
             <button
-              type="button"
-              onClick={handleGoogleSignup}
-              className="flex items-center justify-center p-2.5 rounded-lg bg-[#1c1f26] hover:bg-[#272a31] border border-gray-700 transition-colors duration-200"
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors mt-6"
             >
-              <img src="/google.svg" alt="Google" className="w-5 h-5" />
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
-          </div>
 
-          <p className="text-center text-gray-400 text-sm">
-            Already have an account?{' '}
-            <Link to="/login" className="text-orange-400 hover:text-orange-500">
-              Sign in
-            </Link>
-          </p>
-        </form>
+            <div className="text-center mt-6">
+              <p className="text-gray-400">
+                Already have an account?{' '}
+                <Link to="/login" className="text-purple-500 hover:text-purple-400">
+                  Login
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Signup; 
+export default Signup;
