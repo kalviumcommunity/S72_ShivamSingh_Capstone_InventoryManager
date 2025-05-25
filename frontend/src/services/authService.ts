@@ -54,14 +54,26 @@ const authService = {
   },
 
   async signup(data: SignupData): Promise<AuthResponse> {
+    // Validate passwords match
+    console.log('authService signup - Password values:', {
+      password: data.password,
+      passwordConfirm: data.passwordConfirm,
+      match: data.password === data.passwordConfirm
+    });
+    
+    if (data.password !== data.passwordConfirm) {
+      throw new Error('Passwords do not match');
+    }
+
     const response = await api.post<AuthResponse>('/auth/register', {
       name: data.name,
       email: data.email,
       password: data.password,
       passwordConfirm: data.passwordConfirm,
       companyName: data.companyName,
-      role: data.role
+      role: 'Staff' // Always set default role to Staff
     });
+
     if (response.data.token) {
       localStorage.setItem('auth_token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));

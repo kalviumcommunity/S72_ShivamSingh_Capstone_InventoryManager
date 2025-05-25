@@ -18,7 +18,12 @@ const Signup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted with data:', formData);
+    console.log('Password values:', {
+      password: formData.password,
+      passwordConfirm: formData.passwordConfirm,
+      match: formData.password === formData.passwordConfirm
+    });
+    
     if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
@@ -32,21 +37,15 @@ const Signup: React.FC = () => {
         password: formData.password,
         passwordConfirm: formData.passwordConfirm,
         companyName: formData.companyName,
-        role: 'Staff'
+        role: 'Staff' // Always set role to Staff for new signups
       };
-      console.log('Sending signup data:', signupData);
+      console.log('Signup data being sent:', signupData);
       await signup(signupData);
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Signup error:', error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else if (error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error('Failed to create account. Please try again.');
-      }
+      toast.error(error.response?.data?.message || error.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
@@ -54,25 +53,17 @@ const Signup: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log('Form field changed:', { name, value });
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [name]: value
-      };
-      console.log('Previous form data:', prev);
-      console.log('New form data:', newData);
-      return newData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const goToLanding = () => {
     navigate('/');
   };
 
-  // Add this after component mounts
   useEffect(() => {
-    // Create a floating back button
     const backButton = document.createElement('button');
     backButton.innerHTML = '<strong style="font-size: 24px;">←</strong> <span>Back</span>';
     backButton.onclick = goToLanding;
@@ -94,7 +85,6 @@ const Signup: React.FC = () => {
     
     document.body.appendChild(backButton);
     
-    // Clean up on unmount
     return () => {
       document.body.removeChild(backButton);
     };
@@ -102,7 +92,6 @@ const Signup: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0f1117] relative">
-      {/* Main Content */}
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md">
           <h1 className="text-4xl font-bold text-white text-center mb-8">Sign Up</h1>
@@ -195,4 +184,4 @@ const Signup: React.FC = () => {
   );
 };
 
-export default Signup; 
+export default Signup;
