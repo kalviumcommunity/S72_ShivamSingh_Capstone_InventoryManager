@@ -54,25 +54,33 @@ const authService = {
   },
 
   async signup(data: SignupData): Promise<AuthResponse> {
-    // Validate passwords match
-    console.log('authService signup - Password values:', {
-      password: data.password,
-      passwordConfirm: data.passwordConfirm,
-      match: data.password === data.passwordConfirm
-    });
-    
+    console.log('Raw signup data received:', data); // Debug log
+
+    // Validate required fields
+    if (!data.password || !data.passwordConfirm) {
+      console.log('Missing password fields:', { 
+        password: !!data.password, 
+        passwordConfirm: !!data.passwordConfirm 
+      }); // Debug log
+      throw new Error('Both password and password confirmation are required');
+    }
+
     if (data.password !== data.passwordConfirm) {
       throw new Error('Passwords do not match');
     }
 
-    const response = await api.post<AuthResponse>('/auth/register', {
+    const signupPayload = {
       name: data.name,
       email: data.email,
       password: data.password,
       passwordConfirm: data.passwordConfirm,
       companyName: data.companyName,
-      role: 'Staff' // Always set default role to Staff
-    });
+      role: data.role || 'Staff'
+    };
+
+    console.log('Processed signup payload:', signupPayload); // Debug log
+
+    const response = await api.post<AuthResponse>('/auth/register', signupPayload);
 
     if (response.data.token) {
       localStorage.setItem('auth_token', response.data.token);

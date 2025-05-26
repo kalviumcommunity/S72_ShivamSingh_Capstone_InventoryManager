@@ -15,15 +15,19 @@ export default function Signup() {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
+    const newFormData = {
       ...formData,
       [e.target.name]: e.target.value
-    });
+    };
+    console.log('Form data after change:', newFormData); // Debug log
+    setFormData(newFormData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    console.log('Current form data:', formData); // Debug log
 
     // Validate passwords match
     if (formData.password !== formData.passwordConfirm) {
@@ -32,10 +36,23 @@ export default function Signup() {
     }
 
     try {
-      await authService.signup(formData);
+      // Create a new object with all the form data
+      const signupData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        passwordConfirm: formData.passwordConfirm,
+        companyName: formData.companyName,
+        role: formData.role
+      };
+      
+      console.log('Signup data being sent:', signupData); // Debug log
+      
+      await authService.signup(signupData);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred during signup');
+      console.error('Signup error:', err); // Debug log
+      setError(err.message || err.response?.data?.message || 'An error occurred during signup');
     }
   };
 
@@ -130,7 +147,7 @@ export default function Signup() {
                 onChange={handleChange}
               >
                 <option value="Staff">Staff</option>
-                <option value="Manager">Manager</option>
+                <option value="Store Manager">Store Manager</option>
                 <option value="Admin">Admin</option>
               </select>
             </div>

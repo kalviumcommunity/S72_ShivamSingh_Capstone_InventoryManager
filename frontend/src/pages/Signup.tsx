@@ -18,16 +18,14 @@ const Signup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Password values:', {
-      password: formData.password,
-      passwordConfirm: formData.passwordConfirm,
-      match: formData.password === formData.passwordConfirm
-    });
+    
+    console.log('Form data before validation:', formData);
     
     if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
     }
+
     setIsLoading(true);
 
     try {
@@ -37,9 +35,11 @@ const Signup: React.FC = () => {
         password: formData.password,
         passwordConfirm: formData.passwordConfirm,
         companyName: formData.companyName,
-        role: 'Staff' // Always set role to Staff for new signups
+        role: formData.role
       };
-      console.log('Signup data being sent:', signupData);
+
+      console.log('Sending signup data:', signupData);
+      
       await signup(signupData);
       toast.success('Account created successfully!');
       navigate('/dashboard');
@@ -53,10 +53,15 @@ const Signup: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    console.log('Form field changed:', { name, value });
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: value
+      };
+      console.log('New form data:', newData);
+      return newData;
+    });
   };
 
   const goToLanding = () => {
@@ -140,7 +145,7 @@ const Signup: React.FC = () => {
               <label className="block text-gray-400 mb-2">Confirm Password</label>
               <input
                 type="password"
-                name="passwordConfirm"
+                name="passwordConfirm" // Ensure this is correctly named
                 value={formData.passwordConfirm}
                 onChange={handleChange}
                 placeholder="Confirm your password"

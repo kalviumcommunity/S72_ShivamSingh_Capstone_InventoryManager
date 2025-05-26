@@ -10,7 +10,7 @@ const Signup: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirm: '',
     companyName: '',
     role: ''
   });
@@ -18,10 +18,9 @@ const Signup: React.FC = () => {
   const [showRoleSelection, setShowRoleSelection] = useState(true);
 
   const roles = [
-    { id: 'admin', title: 'Admin', description: 'Full access to all features including user management' },
-    { id: 'store-manager', title: 'Store Manager', description: 'Manage inventory and view reports' },
-    { id: 'employee', title: 'Employee', description: 'Basic inventory management' },
-    { id: 'store-worker', title: 'Store Worker', description: 'View and update inventory only' }
+    { id: 'Admin', title: 'Admin', description: 'Full access to all features including user management' },
+    { id: 'Store Manager', title: 'Store Manager', description: 'Manage inventory and view reports' },
+    { id: 'Staff', title: 'Staff', description: 'Basic inventory management' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +29,7 @@ const Signup: React.FC = () => {
       toast.error('Please select a role');
       return;
     }
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.passwordConfirm) {
       toast.error('Passwords do not match');
       return;
     }
@@ -131,8 +130,8 @@ const Signup: React.FC = () => {
               <label className="block text-gray-400 mb-2">Confirm Password</label>
               <input
                 type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
                 onChange={handleChange}
                 placeholder="Confirm your password"
                 className="w-full px-4 py-3 rounded-lg bg-[#1c1f26] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
