@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
       },
     ];
 
-    // Only show Settings for admin role
+    // Show Settings for admin role
     if (user?.role === 'admin') {
       baseItems.push({ 
         name: 'Settings',

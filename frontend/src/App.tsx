@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
@@ -6,7 +7,6 @@ import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
-import RoleSelection from './pages/auth/RoleSelection'
 import Dashboard from './pages/Dashboard'
 import Inventory from './pages/Inventory'
 import Orders from './pages/Orders'
@@ -23,15 +23,10 @@ import Tour from './pages/Tour'
 
 // Protected Route wrapper component
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
-  }
-
-  // Redirect to role selection if no role is set
-  if (!user?.role && !['/role-selection', '/logout'].includes(window.location.pathname)) {
-    return <Navigate to="/role-selection" />;
   }
 
   return children;
@@ -59,16 +54,6 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/tour" element={<Tour />} />
-
-        {/* Role Selection Route */}
-        <Route
-          path="/role-selection"
-          element={
-            <PrivateRoute>
-              <RoleSelection />
-            </PrivateRoute>
-          }
-        />
 
         {/* Protected Routes */}
         <Route

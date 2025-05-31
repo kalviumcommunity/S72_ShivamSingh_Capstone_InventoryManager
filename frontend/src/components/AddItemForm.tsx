@@ -190,43 +190,51 @@ const AddItemForm: React.FC<Props> = ({ onSubmit, onClose, isSubmitting, initial
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('handleSubmit called');
-    if (validateStep(step)) {
-      console.log('Validation passed for step', step);
-      try {
-        // Create FormData object
-        const formDataObj = new FormData();
-        formDataObj.append('name', formData.name);
-        formDataObj.append('category', formData.category);
-        formDataObj.append('quantity', formData.quantity.toString());
-        formDataObj.append('price', formData.price.toString());
-        formDataObj.append('minimumQuantity', formData.minimumQuantity.toString());
-
-        // Handle image
-        if (formData.image instanceof File) {
-          formDataObj.append('image', formData.image);
-        } else if (typeof formData.image === 'string' && formData.image.startsWith('http')) {
-          formDataObj.append('imageUrl', formData.image);
-        } else if (isEdit && typeof formData.image === 'string' && formData.image) {
-          formDataObj.append('image', formData.image);
-        }
-
-        // Log the FormData contents for debugging
-        console.log('Submitting form data:');
-        for (let pair of formDataObj.entries()) {
-          console.log(pair[0] + ': ' + pair[1]);
-        }
-
-        console.log('Submitting form data:', Object.fromEntries(formDataObj.entries()));
-        console.log('Calling onSubmit prop...');
-
-        await onSubmit(formDataObj);
-        console.log('onSubmit call finished');
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        toast.error('Failed to submit form');
-      }
-    } else {
+    
+    // Always validate the current step first
+    if (!validateStep(step)) {
       console.log('Validation failed for step', step);
+      return;
+    }
+
+    // If we're not on the final step, move to the next step instead of submitting
+    if (step < 3) {
+      console.log('Not on final step, moving to next step');
+      setStep(step + 1);
+      return;
+    }
+    
+    console.log('Final step validation passed');
+    try {
+      // Create FormData object
+      const formDataObj = new FormData();
+      formDataObj.append('name', formData.name);
+      formDataObj.append('category', formData.category);
+      formDataObj.append('quantity', formData.quantity.toString());
+      formDataObj.append('price', formData.price.toString());
+      formDataObj.append('minimumQuantity', formData.minimumQuantity.toString());
+
+      // Handle image
+      if (formData.image instanceof File) {
+        formDataObj.append('image', formData.image);
+      } else if (typeof formData.image === 'string' && formData.image.startsWith('http')) {
+        formDataObj.append('imageUrl', formData.image);
+      } else if (isEdit && typeof formData.image === 'string' && formData.image) {
+        formDataObj.append('image', formData.image);
+      }
+
+      // Log the FormData contents for debugging
+      console.log('Submitting form data:');
+      for (let pair of formDataObj.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
+
+      console.log('Calling onSubmit prop...');
+      await onSubmit(formDataObj);
+      console.log('onSubmit call finished');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('Failed to submit form');
     }
   };
 
@@ -573,7 +581,8 @@ const AddItemForm: React.FC<Props> = ({ onSubmit, onClose, isSubmitting, initial
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={isSubmitting}
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -605,4 +614,4 @@ const AddItemForm: React.FC<Props> = ({ onSubmit, onClose, isSubmitting, initial
   );
 };
 
-export default AddItemForm; 
+export default AddItemForm;

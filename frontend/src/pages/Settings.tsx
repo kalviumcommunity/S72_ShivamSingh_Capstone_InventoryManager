@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import {
   UserGroupIcon,
@@ -60,8 +61,8 @@ const Settings: React.FC = () => {
     }
   };
 
-  // Only allow access if user is admin
-  if (currentUser?.role !== 'admin') {
+  // Allow access for admin users
+  if (currentUser?.role !== 'admin' && currentUser?.role !== 'Admin') {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
@@ -114,10 +115,11 @@ const Settings: React.FC = () => {
                       onChange={(e) => handleRoleChange(user._id, e.target.value)}
                       className="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm focus:border-orange-500 focus:ring-orange-500 dark:text-white"
                     >
-                      <option value="admin">Admin</option>
-                      <option value="store-manager">Store Manager</option>
-                      <option value="employee">Employee</option>
-                      <option value="store-worker">Store Worker</option>
+                      <option value="Admin">Admin</option>
+                      <option value="Store Manager">Store Manager</option>
+                      <option value="Staff">Staff</option>
+                      <option value="Employee">Employee</option>
+                      <option value="Store Worker">Store Worker</option>
                     </select>
                     <select
                       value={user.status}
@@ -142,7 +144,7 @@ const Settings: React.FC = () => {
         </div>
         <div className="border-t border-gray-200 dark:border-gray-700">
           <div className="px-4 py-5 sm:p-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <h4 className="font-semibold text-gray-900 dark:text-white">Admin</h4>
                 <ul className="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -159,6 +161,14 @@ const Settings: React.FC = () => {
                   <li>Order management</li>
                   <li>Reports access</li>
                   <li>Staff management</li>
+                </ul>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-white">Staff</h4>
+                <ul className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  <li>Basic inventory access</li>
+                  <li>Order processing</li>
+                  <li>Limited reports</li>
                 </ul>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
