@@ -1,93 +1,192 @@
-# Inventory Manager
+# Inventory Management System
 
-## 📌 Project Overview
-Inventory Manager is a web application designed to help businesses efficiently track and manage their inventory. It features **role-based access control**, activity logs, and **real-time stock alerts** to improve operational efficiency.
+A modern, responsive inventory management system built with React, TypeScript, and MongoDB.
 
-## 🚀 Features
-- **Role-Based Access:**
-  - 🏢 Store Managers: Full CRUD access (Create, Read, Update, Delete inventory items, manage users, view logs).
-  - 👷 Staff Members: Can only view inventory and track stock levels.
-- **Activity Logs:** Track changes made by users for transparency.
-- **Notifications:** Get **email and in-app alerts** for low-stock items.
-- **Authentication:** Secure login/signup using JWT (Google OAuth optional).
-- **CRUD Operations:** Easily manage inventory through an intuitive interface.
-- **Responsive UI:** A modern, mobile-friendly interface with animations.
+## Features
 
-## 🛠️ Tech Stack
-- **Frontend:** React.js (Vite), Tailwind CSS, Framer Motion
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB (Mongoose ORM)
-- **Authentication:** JWT-based auth, Google OAuth (optional)
-- **Deployment:** Vercel (Frontend), Render/Heroku (Backend)
+- 🔐 **Authentication**: Firebase Authentication with Google Sign-in
+- 📦 **Inventory Management**: Add, edit, delete, and search inventory items
+- 📂 **Category Management**: Organize items by categories
+- 📊 **Dashboard**: Real-time statistics and low stock alerts
+- 🎨 **Modern UI**: Beautiful, responsive design with dark/light theme
+- 📱 **Mobile Friendly**: Works seamlessly on all devices
+- 🔍 **Search & Filter**: Advanced search capabilities
+- 📈 **Activity Logging**: Track all user activities
+- ⚡ **Real-time Updates**: Instant data synchronization
 
-## 📂 Folder Structure
+## Tech Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Framer Motion
+- **Database**: MongoDB
+- **Authentication**: Firebase Auth
+- **State Management**: React Context API
+- **Icons**: Lucide React, React Icons
+
+## Quick Start
+
+### Prerequisites
+
+1. **Node.js** (v16 or higher)
+2. **MongoDB** (local or Atlas)
+3. **Firebase Project** (for authentication)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd inventory-management-system
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env` file in the root directory:
+   ```env
+   # MongoDB Configuration
+   VITE_MONGODB_URI=mongodb://localhost:27017
+   VITE_MONGODB_DB_NAME=inventory_manager
+   
+   # Firebase Configuration
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Set up MongoDB**
+   
+   - **Local MongoDB**: Install and start MongoDB server
+   - **MongoDB Atlas**: Create a cluster and get connection string
+   
+   See [MONGODB_SETUP.md](./MONGODB_SETUP.md) for detailed instructions.
+
+5. **Set up Firebase**
+   
+   - Create a Firebase project
+   - Enable Authentication (Email/Password and Google)
+   - Get your Firebase config
+   - Update the environment variables
+
+6. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+7. **Open your browser**
+   
+   Navigate to `http://localhost:5173`
+
+## Project Structure
+
 ```
-📦 inventory-manager
- ┣ 📂 client         # React.js frontend
- ┣ 📂 server         # Node.js backend
- ┣ 📜 .gitignore     # Ignore unnecessary files
- ┣ 📜 README.md      # Project documentation
- ┣ 📜 package.json   # Dependencies
- ┗ 📜 LICENSE        # License details
+src/
+├── components/          # React components
+│   ├── auth/           # Authentication components
+│   ├── common/         # Reusable UI components
+│   ├── inventory/      # Inventory-related components
+│   ├── layout/         # Layout components
+│   ├── roles/          # Role management components
+│   └── users/          # User management components
+├── context/            # React Context providers
+├── hooks/              # Custom React hooks
+├── lib/                # Utility libraries
+│   ├── firebase.ts     # Firebase configuration
+│   ├── mongodb.ts      # MongoDB connection
+│   ├── mongoInventoryService.ts  # MongoDB service layer
+│   └── mongoSetup.ts   # MongoDB initialization
+├── pages/              # Page components
+├── types/              # TypeScript type definitions
+└── routes.tsx          # Application routing
 ```
 
-## 🚀 Installation & Setup
-### **1️⃣ Clone the Repository**
-```sh
-git clone https://github.com/your-username/inventory-manager.git
-cd inventory-manager
-```
-### **2️⃣ Install Dependencies**
-```sh
-# Install backend dependencies
-cd server
-npm install
+## Database Schema
 
-# Install frontend dependencies
-cd ../client
-npm install
-```
-### **3️⃣ Setup Environment Variables**
-Create a `.env` file inside `server/` and add:
-```
-MONGO_URI=your-mongodb-connection-string
-JWT_SECRET=your-secret-key
-```
-### **4️⃣ Run the Project**
-```sh
-# Start backend server
-cd server
-npm start
-
-# Start frontend
-cd ../client
-npm run dev
+### Categories Collection
+```javascript
+{
+  _id: ObjectId,
+  name: String (unique),
+  description: String,
+  created_at: Date,
+  updated_at: Date
+}
 ```
 
-## 🌍 Deployment
-- **Frontend:** Hosted on Vercel → [Live Link](#)
-- **Backend:** Hosted on Render/Heroku → [API Docs](#)
+### Inventory Items Collection
+```javascript
+{
+  _id: ObjectId,
+  name: String,
+  description: String,
+  sku: String (unique),
+  category_id: ObjectId (references categories),
+  quantity: Number,
+  price: Number,
+  threshold: Number,
+  image_url: String,
+  created_by: String (user ID),
+  created_at: Date,
+  updated_at: Date
+}
+```
 
-## 📌 Roadmap
-- [x] Role-based access control ✅
-- [x] CRUD operations for inventory ✅
-- [ ] Implement Google OAuth 🔄
-- [ ] Add unit tests using Jest 🔄
-- [ ] Dockerize the application 🔄
-- [ ] Implement a dashboard with analytics for inventory trends 📊
-- [ ] Add support for barcode scanning for faster inventory management 🔄
-- [ ] Introduce multi-language support for better accessibility 🌍
-- [ ] Enable export/import functionality for inventory data 📂
-- [ ] Optimize performance and reduce API response time 🚀
+## Available Scripts
 
-## 📄 License
-This project is licensed under the **MIT License**.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
----
+## Features in Detail
 
-💡 **Contributions are welcome!** Feel free to open an issue or submit a pull request. 🚀
+### Authentication
+- Email/password authentication
+- Google Sign-in
+- Anonymous authentication
+- Protected routes
 
-**Render deploy link**
+### Inventory Management
+- Add new inventory items
+- Edit existing items
+- Delete items
+- Search and filter
+- Low stock alerts
+- Category organization
 
-https://s72-shivamsingh-capstone-inventorymanager.onrender.com
+### Dashboard
+- Total items count
+- Low stock items
+- Recent activities
+- Quick actions
 
+### User Management
+- User roles and permissions
+- Activity logging
+- User profiles
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions:
+- Check the [MongoDB Setup Guide](./MONGODB_SETUP.md)
+- Review the Firebase documentation
+- Open an issue on GitHub
