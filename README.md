@@ -84,6 +84,16 @@ A modern, responsive inventory management system built with React, TypeScript, a
    
    Navigate to `http://localhost:5173`
 
+## Deployment
+
+The application is deployed on Render:
+- **Frontend**: [Your frontend URL here]
+- **Backend API**: https://s72-shivamsingh-capstone-inventorymanager.onrender.com
+
+For local development, the API defaults to the production URL. To use a local backend:
+1. Create a `.env` file in the root directory
+2. Add: `VITE_API_URL=http://localhost:5000/api`
+
 ## Project Structure
 
 ```

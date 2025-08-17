@@ -26,7 +26,7 @@ start "Frontend Server" cmd /k "npm run dev"
 
 echo.
 echo Both servers are starting...
-echo Backend: http://localhost:5000
+echo Backend: http://localhost:5000 (local) / https://s72-shivamsingh-capstone-inventorymanager.onrender.com (production)
 echo Frontend: http://localhost:5173
 echo.
 echo Press any key to close this window...
