@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Light theme styles */
+  :root:not(.dark) body {
+    @apply bg-light-bg text-light-text;
+    background-image: url('/public/Supermarket seamless pattern vector image on VectorStock copy.jpg');
+    background-size: 400px 400px;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    position: relative;
+  }
+
+  /* Add overlay to make pattern subtle */
+  :root:not(.dark) body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.80) 50%,
+      rgba(255, 255, 255, 0.85) 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Dark theme styles */
+  .dark body {
+    @apply bg-dark-bg text-dark-text;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+  }
+}
+
+@layer components {
+  /* Card component */
+  .card {
+    @apply bg-white/80 dark:bg-dark-card border border-light-border dark:border-dark-border rounded-2xl backdrop-blur-glass p-6;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  }
+
+  .dark .card {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Button components */
+  .btn {
+    @apply bg-white/80 dark:bg-dark-card text-light-text dark:text-dark-text border-2 border-light-border dark:border-dark-border rounded-xl px-6 py-3 font-semibold transition-all duration-300 backdrop-blur-glass relative overflow-hidden;
+  }
+
+  .btn:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+  }
+
+  .dark .btn:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-primary {
+    @apply bg-light-primary dark:bg-dark-primary text-white border-light-primary dark:border-dark-primary;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .btn-primary:hover {
+    @apply bg-light-primary-hover dark:bg-dark-primary-hover;
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-light-primary dark:text-dark-primary border-light-primary dark:border-dark-primary;
+  }
+
+  .btn-outline:hover {
+    @apply bg-light-primary dark:bg-dark-primary text-white;
+  }
+
+  /* Input components */
+  .input {
+    @apply bg-white/80 dark:bg-dark-card border-2 border-light-border dark:border-dark-border rounded-xl text-light-text dark:text-dark-text px-5 py-3 transition-all duration-300 backdrop-blur-glass;
+  }
+
+  .input:focus {
+    @apply border-light-primary dark:border-dark-primary outline-none;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+  }
+
+  .input:hover {
+    @apply border-light-primary dark:border-dark-primary -translate-y-0.5;
+  }
+
+  /* Navigation styles */
+  .nav-header {
+    @apply bg-light-nav dark:bg-dark-nav border-b border-light-border dark:border-dark-border backdrop-blur-glass;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+  }
+
+  .dark .nav-header {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Stats card animations */
+  .stats-card:nth-child(1) { animation-delay: 0s; }
+  .stats-card:nth-child(2) { animation-delay: -2s; }
+  .stats-card:nth-child(3) { animation-delay: -4s; }
+  .stats-card:nth-child(4) { animation-delay: -6s; }
+}
+
+@layer utilities {
+  /* Theme-aware text colors */
+  .text-theme {
+    @apply text-light-text dark:text-dark-text;
+  }
+
+  .text-theme-secondary {
+    @apply text-light-text-secondary dark:text-dark-text-secondary;
+  }
+
+  /* Theme-aware backgrounds */
+  .bg-theme {
+    @apply bg-light-bg dark:bg-dark-bg;
+  }
+
+  .bg-theme-card {
+    @apply bg-white/80 dark:bg-dark-card;
+  }
+
+  .bg-theme-nav {
+    @apply bg-light-nav dark:bg-dark-nav;
+  }
+
+  /* Theme-aware borders */
+  .border-theme {
+    @apply border-light-border dark:border-dark-border;
+  }
+
+  /* Theme-aware hover states */
+  .hover-theme {
+    @apply hover:bg-light-hover dark:hover:bg-dark-hover;
+  }
+
+  /* Smooth transitions for theme switching */
+  .theme-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Custom focus styles */
+  .focus-theme {
+    @apply focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary focus:ring-offset-2;
+  }
+}
+
+/* Custom selection colors */
+::selection {
+  @apply bg-light-primary dark:bg-dark-primary text-white;
+}
+
+::-moz-selection {
+  @apply bg-light-primary dark:bg-dark-primary text-white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-light-secondary dark:bg-dark-secondary rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-light-primary dark:bg-dark-primary rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-light-primary-hover dark:bg-dark-primary-hover;
+}
+
+/* Remove default focus styles for mouse users */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
