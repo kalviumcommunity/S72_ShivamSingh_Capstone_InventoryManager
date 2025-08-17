@@ -520,3 +520,23 @@ async function startServer() {
 }
 
 startServer().catch(console.error); 
+
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://inventorymangement3669.netlify.app" // your Netlify site
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // if you use cookies/auth
+  })
+);
+
+app.use(express.json());
