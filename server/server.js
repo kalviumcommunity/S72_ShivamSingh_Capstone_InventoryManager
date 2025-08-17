@@ -521,21 +521,29 @@ async function startServer() {
 
 startServer().catch(console.error); 
 
+// ✅ Allowed domains (whitelist)
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://inventorymangement3669.netlify.app" // your Netlify site
+  "http://localhost:5173",                  // local dev
+  "https://inventorymangement3669.netlify.app" // deployed frontend
 ];
 
+// ✅ CORS configuration
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
+      // allow requests with no origin (e.g. curl, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        return callback(
+          new Error("CORS not allowed for this origin: " + origin),
+          false
+        );
       }
     },
-    credentials: true, // if you use cookies/auth
+    credentials: true,
   })
 );
 
